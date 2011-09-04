@@ -121,6 +121,14 @@ class Promise
   def method_missing( *args, &block ) #:nodoc:
     __result__.__send__( *args, &block )
   end
+  
+  # Add this method definition here.  There is a weird incompatibility with
+  # Dragonfly, ActiveSupport, and lazy when running on jRuby where this method
+  # is found as "undefined" on the object, even though it is defined.  This
+  # hack works around it.
+  def blank?
+    respond_to?(:empty?) ? empty? : !self
+  end
 end
 
 Promise.ancestors.each do |c|
